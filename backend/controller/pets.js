@@ -6,7 +6,6 @@ const fs = require("fs");
 const readXlsxFile = require("read-excel-file/node");
 var excelToJson = require("convert-excel-to-json");
 const Pet = require("../models/petModel");
-const { resolve } = require("path");
 
 //GET /api/pets
 const getPets = async (req, res) => {
@@ -21,9 +20,15 @@ const addPets = async (req, res) => {
   let p = filepath + "/upload/" + req.file.filename;
 
   const data = await readXlsxFile(p);
+  console.log(data.length)
+  if(data.length <= 0)
+  {
+    res.status(400).json({message:'DataSet empty'})
+
+  }else
+  {
   data.shift();
   let createPetDetails;
-  try {
     data.forEach(async (item) => {
       createPetDetails = await Pet.create({
         name: item[0],
@@ -31,11 +36,9 @@ const addPets = async (req, res) => {
         breed: item[2],
         age: item[3],
       });
-    });
-  } catch (error) {
-    console.log(error);
-  }
+    });  
   res.status(200).json({message:'Dataset added into database!'});
+}
 };
 
 //PATCH /api/pets/:id
@@ -46,13 +49,18 @@ const updatePetWithId = async (req, res) => {
     console.log("Not found")
     res.status(400).json({message:'Pet not found!'})
   }
+  else
+  {
+    
+  }
   const updatedPet = await Pet.findByIdAndUpdate(req.params.id,req.body,{new:true})
   res.status(200).json(updatedPet)
 };
 
 //DELETE /api/pets/:id
 const deletePetWithId = async (req, res) => {
-  const pet = await Pet.findById(req.params.id)
+ 
+  const pet = await Pet.findOne(req.params.id)
   if(!pet)
   {
     console.log("Not found")    
