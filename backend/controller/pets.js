@@ -1,10 +1,4 @@
-const XLSX = require("xlsx");
-const multer = require("multer");
-const path = require("path");
-const upload = multer();
-const fs = require("fs");
 const readXlsxFile = require("read-excel-file/node");
-var excelToJson = require("convert-excel-to-json");
 const Pet = require("../models/petModel");
 
 //GET /api/pets

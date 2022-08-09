@@ -2,7 +2,6 @@ const express = require('express');
 const { getPets, deletePetWithId, updatePetWithId, addPets } = require('../controller/pets');
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
 const upload = multer({ dest: 'upload/'});
 router.get('/',getPets)
 
